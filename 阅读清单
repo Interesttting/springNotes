@@ -1,0 +1,4 @@
+spring项目主要以注解配置为主。
+工程结构：
+1、spring-framework-master 源码项目（添加了个人注释）
+2、springSimple 关于ioc相关的例子 主要参考 springSimple/src/test/java/BeanTest.java 每个test方法

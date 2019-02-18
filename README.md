@@ -1,4 +1,4 @@
-spring源码转为maven工程太麻烦。
+spring源码转为maven工程太麻烦。不能像mybatis源码那样在运行时调试工程下的spring源码。
 工程结构：
 1、spring源码
 2、spring简单例子工程
