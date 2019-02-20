@@ -50,6 +50,11 @@ import org.springframework.lang.Nullable;
  */
 class PostProcessorRegistrationDelegate {
 
+	/**
+	 *主要意思：
+	 * 初始化ioc容器中所有的bean中BeanFactoryPostProcessors 类型的bean （把beanfactory对象或者registry对象设置到 BeanFactoryPostProcessors 类型的bean中）
+	 * ps：其中BeanFactoryPostProcessors 类型的bean 按一定的顺序先后初始化
+	 */
 	public static void invokeBeanFactoryPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, List<BeanFactoryPostProcessor> beanFactoryPostProcessors) {
 
@@ -182,7 +187,12 @@ class PostProcessorRegistrationDelegate {
 		// modified the original metadata, e.g. replacing placeholders in values...
 		beanFactory.clearMetadataCache();
 	}
-
+	/**
+	 * 主要意思：
+	 * 从beanfactory 所有的bean 中获取BeanPostProcessor类型的bean 并且按PriorityOrdered、Ordered、无排序类型、MergedBeanDefinitionPostProcessor 四个级别的顺序
+	 * 加入到beanfactory中的 后置处理器集合
+	 * 最后在创建ApplicationListenerDetector后置处理器 加入到beanfactory中的后置处理器集合
+	 */
 	public static void registerBeanPostProcessors(
 			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 

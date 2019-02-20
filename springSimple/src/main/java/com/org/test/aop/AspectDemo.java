@@ -27,7 +27,7 @@ public class AspectDemo {
      *  *
      *  * 定义在pointcutexp包和所有子包里的JoinPointObjP2类的任意方法的执行：execution(* com.test.spring.aop.pointcutexp..JoinPointObjP2.*(..))")
      */
-    @Pointcut("execution(public com.org.test.aop.Calc *(..))")
+    @Pointcut("execution(public * com.org.test.aop.Calc.*(..))")
     public void pointcut(){}
 
     @Before("pointcut()")

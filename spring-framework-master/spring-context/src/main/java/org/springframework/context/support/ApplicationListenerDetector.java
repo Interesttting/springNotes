@@ -41,6 +41,10 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Juergen Hoeller
  * @since 4.3.4
+ *
+ * 该BeanPostProcessor检测那些实现了接口ApplicationListener的bean，
+ * 在它们创建时初始化之后，将它们添加到应用上下文的事件多播器上 查看postProcessAfterInitialization方法；
+ * 并在这些ApplicationListener bean销毁之前，将它们从应用上下文的事件多播器上移除 查看postProcessBeforeDestruction方法。
  */
 class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, MergedBeanDefinitionPostProcessor {
 
@@ -71,8 +75,9 @@ class ApplicationListenerDetector implements DestructionAwareBeanPostProcessor, 
 		if (bean instanceof ApplicationListener) {
 			// potentially not detected as a listener by getBeanNamesForType retrieval
 			Boolean flag = this.singletonNames.get(beanName);
+			// 如果当前 ApplicationListener bean scope 是 singleton 单例模式，
 			if (Boolean.TRUE.equals(flag)) {
-				// singleton bean (top-level or inner): register on the fly
+				// 则将它注册到应用的事件多播器上
 				this.applicationContext.addApplicationListener((ApplicationListener<?>) bean);
 			}
 			else if (Boolean.FALSE.equals(flag)) {

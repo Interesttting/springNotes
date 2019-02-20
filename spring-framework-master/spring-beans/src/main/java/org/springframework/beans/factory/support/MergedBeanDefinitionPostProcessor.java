@@ -34,6 +34,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * @author Juergen Hoeller
  * @since 2.5
  * @see org.springframework.beans.factory.config.ConfigurableBeanFactory#getMergedBeanDefinition
+ * 合并Bean定义后置处理器
  */
 public interface MergedBeanDefinitionPostProcessor extends BeanPostProcessor {
 
