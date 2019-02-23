@@ -1007,18 +1007,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			if (logger.isInfoEnabled()) {
 				logger.info("Closing " + this);
 			}
-
+			//注销 JMX 监视
 			LiveBeansView.unregisterApplicationContext(this);
 
 			try {
-				// Publish shutdown event.
+				// 发布 关闭容器的事件 ，要自己实现 事件监听
 				publishEvent(new ContextClosedEvent(this));
 			}
 			catch (Throwable ex) {
 				logger.warn("Exception thrown from ApplicationListener handling ContextClosedEvent", ex);
 			}
 
-			// Stop all Lifecycle beans, to avoid delays during individual destruction.
+			// S关闭所有具有独自声明周期的bean （从这里可以看出 这个bean不归ioc管理）
 			if (this.lifecycleProcessor != null) {
 				try {
 					this.lifecycleProcessor.onClose();
@@ -1028,13 +1028,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				}
 			}
 
-			// Destroy all cached singletons in the context's BeanFactory.
+			// 销毁所有的bean，触发一些bean的销毁方法
 			destroyBeans();
 
-			// Close the state of this context itself.
+			// 关闭beanfactory 触发关闭容器的时间
 			closeBeanFactory();
 
-			// Let subclasses do some final clean-up if they wish...
+			// 留给自定义的容器实现
 			onClose();
 
 			this.active.set(false);
