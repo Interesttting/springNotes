@@ -12,6 +12,7 @@
         <module>springSimple</module>
         <module>oldSimple</module>
         <module>servlet3</module>
+        <module>mvc</module>
     </modules>
     <dependencies>
 
