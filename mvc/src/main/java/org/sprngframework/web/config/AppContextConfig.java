@@ -1,9 +1,7 @@
 package org.sprngframework.web.config;
 
-import org.springframework.context.annotation.Bean;
+import org.mvc.web.intercept.MyIntercept;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.PathMatcher;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
@@ -12,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.*;
  */
 @ComponentScan("org.mvc.web")
 @EnableWebMvc
-public class AppContextConfig extends WebMvcConfigurationSupport {
+public class AppContextConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 视图解析器配置
@@ -29,14 +27,18 @@ public class AppContextConfig extends WebMvcConfigurationSupport {
         configurer.enable();
     }
 
-    /**
-     * 覆盖父类的方法 使用自己的bean
-     * @return
-     */
-    @Bean
-    public PathMatcher mvcPathMatcher() {
-        PathMatcher pathMatcher = getPathMatchConfigurer().getPathMatcher();
-        return (pathMatcher != null ? pathMatcher : new AntPathMatcher());
-    }
+//    /**
+//     * 覆盖父类的方法 使用自己的bean
+//     * @return
+//     */
+//    @Bean
+//    public PathMatcher mvcPathMatcher() {
+//        PathMatcher pathMatcher = getPathMatchConfigurer().getPathMatcher();
+//        return (pathMatcher != null ? pathMatcher : new AntPathMatcher());
+//    }
 
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new MyIntercept()).addPathPatterns("/**");
+    }
 }
