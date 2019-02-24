@@ -5,6 +5,9 @@ import javax.servlet.annotation.HandlesTypes;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * 自定义ServletContainerInitializer实现类的简单实现：
+ */
 @HandlesTypes({Filter.class})
 public class MyServletContainerInitializer implements ServletContainerInitializer {
     /**

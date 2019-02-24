@@ -5,7 +5,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.*;
 
 /**
- *  作为app容器的配置类，必须使用 @EnableWebMvc 注解，并且该类必须继承 WebMvcConfigurerAdapter，官方推荐继承 WebMvcConfigurationSupport 或者直接实现 WebMvcConfigurer 接口
+ *  1、作为app容器（或者称为servlet容器）的配置类，必须使用 @EnableWebMvc 注解，并且该类必须继承 WebMvcConfigurerAdapter，
+ *  官方推荐继承 WebMvcConfigurationSupport 或者直接实现 WebMvcConfigurer 接口
+ *  2、servlet容器主要配置 Controller、HandlerMapping、viewResolver bean。
+ *
  * ps：WebMvcConfigurationSupport 配置了spring mvc 默认的配置bean。
  */
 @ComponentScan("org.mvc.web")
@@ -27,15 +30,6 @@ public class AppContextConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-//    /**
-//     * 覆盖父类的方法 使用自己的bean
-//     * @return
-//     */
-//    @Bean
-//    public PathMatcher mvcPathMatcher() {
-//        PathMatcher pathMatcher = getPathMatchConfigurer().getPathMatcher();
-//        return (pathMatcher != null ? pathMatcher : new AntPathMatcher());
-//    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
