@@ -16,7 +16,7 @@ public class MyInitializer extends AbstractAnnotationConfigDispatcherServletInit
 
     /**
      * AnnotationConfigWebApplicationContext 跟容器
-     * RootContextConfig 配置类
+     * RootContextConfig 跟容器配置类
      * @return
      */
     @Override
@@ -26,7 +26,7 @@ public class MyInitializer extends AbstractAnnotationConfigDispatcherServletInit
 
     /**
      * AnnotationConfigWebApplicationContext app容器
-     * AppContextConfig 配置类
+     * AppContextConfig app容器配置类
      * @return
      */
     @Override
@@ -37,11 +37,11 @@ public class MyInitializer extends AbstractAnnotationConfigDispatcherServletInit
     /**
      * 获取DispatcherServlet的 mapping url
      *  /：拦截所有请求（包括静态资源（xx.js,xx.png）），但是不包括*.jsp；
-     *  /*：拦截所有请求；连*.jsp页面都拦截；jsp页面是tomcat的jsp引擎解析的；
+     *  /*：拦截所有请求；连*.jsp页面都拦截；jsp页面是tomcat的jsp引擎解析的；如果配置了"/*" jsp不会被解析
      * @return
      */
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/*"};
+        return new String[]{"/"};
     }
 }

@@ -25,6 +25,7 @@
             <version>5.0.6.RELEASE</version>
         </dependency>
 
+        <!--provided 表示在项目打包的时候不使用当前依赖，而使用jdk的包-->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
