@@ -1,0 +1,22 @@
+前提：不依赖spring 任意的jar，参考spring ioc mvc 的思想 实现一个简易版springmvc框架
+
+框架目标：
+仿造springmvc使用DispatcherServlet统一接收请求，请求处理前处理和解析、handler映射、handler处理返回结果、handler处理后的相关处理、结果解析、收尾工作
+功能大点：
+一、容器初始化：扫描工程下的所有类，保存beandefindtion（bean定义），单例类型进行实例化存放起来（特别是实例化controller类型单例时需要额外的分析handler方法）
+二、请求处理：统一入口、根据容器提供的信息创建Handler，对handler产生的结果解析后返回给客户端
+
+
+功能一小点：
+1、工程下类解析生成beandefindtion
+2、实例化单例
+3、依赖注入
+4、解析Controller类
+功能二小点：
+1、统一接收请求
+2、请求前拦截处理和解析
+3、生成handler
+4、handler处理
+5、handler处理后的处理
+6、解析handler结果
+7、收尾工作
