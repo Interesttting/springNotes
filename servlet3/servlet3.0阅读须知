@@ -22,8 +22,8 @@
 
 二、重点 实现ServletContainerInitializer的方式配置web项目的开发步骤：
  1、在工程目录下创建META-INF/services 目录。
- 2、在META-INF/services 目录下创建名为 javax.servlet.ServletContainerInitializer的文件。
- 3、创建一个实现ServletContainerInitializer接口的java类。并且将这个类的路径引用填入到javax.servlet.ServletContainerInitializer文件中。
+ 2、在META-INF/services 目录下创建名为 javax.javax.http.servlet.ServletContainerInitializer的文件。
+ 3、创建一个实现ServletContainerInitializer接口的java类。并且将这个类的路径引用填入到javax.javax.http.servlet.ServletContainerInitializer文件中。
 
 
 三：该项目实现ServletContainerInitializer
@@ -33,8 +33,15 @@ ServletContainerInitializer的实现类：MyServletContainerInitializer
 servlet3.0重要API:
     ServletContainerInitializer:钩子接口，需要开发者定义一个实现类，在tomcat读取web配置过程中被调用。
     ServletContext：servlet上下文
-    ServletRegistration.Dynamic：servlet
+    ServletRegistration.Dynamic：javax.http.servlet
     FilterRegistration：注册filter时的api
     @WebServlet：注解方式配置servlet
+    @WebListener:注解方式配置监听
+    @WebFilter:注解方式配置过滤器
     AsyncContext：servlet异步处理
 
+四、servlet3.0项目阅读入口类：
+MyServletContainerInitializer
+
+
+Ps：servlet3.0需要tomcat7以及更高版本的支持
