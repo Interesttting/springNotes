@@ -1,0 +1,40 @@
+一、分析Tomcat加载配置的过程：
+  tomcat源码中 webConfig()内容：
+  1、读取web-fragment.xml和各个jar模块
+  2、排序所有读取到的fragments
+  3、查找所有的ServletContainerInitializer(SCIs)
+  4、处理WEB-INF/Classes文件夹下面的
+  5、处理所有的注解配置类和，并缓存
+  6、将所有的web-fragment.xml合并
+  7、转换所有的JSP代码成Java代码
+  8、将Web.xml配置转变成代码式的配置
+  9、查找静态资源默认文件夹WEB-INF/classes/META-INF/resources
+  10、将所有的实现ServletContainerInitializer的类添加到StandardContext的initializers集合中
+
+  总结：实现 步骤8和步骤10都可以更改tomcat对一个应用的配置修改
+  步骤8实现方式即编辑web.xml
+  步骤10实现方式即编写一个实现ServletContainerInitializer接口的实现类
+
+  配置web项目方式有三种：
+  1、只解析web.xml。（**基于web.xml配置的Web项目**）
+  2、只加载ServletContainerInitializer 的实现类。（ **基于注解配置的Web项目** ）
+  3、前面两种方式混用
+
+二、重点 实现ServletContainerInitializer的方式配置web项目的开发步骤：
+ 1、在工程目录下创建META-INF/services 目录。
+ 2、在META-INF/services 目录下创建名为 javax.servlet.ServletContainerInitializer的文件。
+ 3、创建一个实现ServletContainerInitializer接口的java类。并且将这个类的路径引用填入到javax.servlet.ServletContainerInitializer文件中。
+
+
+三：该项目实现ServletContainerInitializer
+ServletContainerInitializer的实现类：MyServletContainerInitializer
+
+
+servlet3.0重要API:
+    ServletContainerInitializer:钩子接口，需要开发者定义一个实现类，在tomcat读取web配置过程中被调用。
+    ServletContext：servlet上下文
+    ServletRegistration.Dynamic：servlet
+    FilterRegistration：注册filter时的api
+    @WebServlet：注解方式配置servlet
+    AsyncContext：servlet异步处理
+

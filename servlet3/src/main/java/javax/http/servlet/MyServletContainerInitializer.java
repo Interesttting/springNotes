@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * 自定义ServletContainerInitializer实现类的简单实现：
  */
-@HandlesTypes({Filter.class})
+@HandlesTypes({Filter.class})//tomcat会在加载过程中把HandlesTypes中的类型的子类集合传入到onStartup方法的形参set中
 public class MyServletContainerInitializer implements ServletContainerInitializer {
     /**
      *
