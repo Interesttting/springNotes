@@ -2,3 +2,7 @@ spring项目主要以注解配置为主。
 工程结构：
 1、spring-framework-master 源码项目（添加了个人注释）
 2、springSimple 关于ioc相关的例子 主要参考 springSimple/src/test/java/BeanTest.java 每个test方法
+3、oldSimple：spring xml配置文件配置项目
+4、servlet3.0：servlet3.0注解方式使用
+5、mvc：springmvc 注解方式配置web项目
+6、mymvc：自定义springmvc 不依赖spring任何东西手写一个简易版springmvc框架
