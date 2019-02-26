@@ -1,8 +1,11 @@
 package org.sprngframework.web.config;
 
 import org.mvc.web.intercept.MyIntercept;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.servlet.config.annotation.*;
+
+import java.util.Date;
 
 /**
  *  1、作为app容器（或者称为servlet容器）的配置类，必须使用 @EnableWebMvc 注解，并且该类必须继承 WebMvcConfigurerAdapter，
@@ -34,5 +37,9 @@ public class AppContextConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new MyIntercept()).addPathPatterns("/**");
+    }
+    @Bean
+    public Date date(){
+        return new Date();
     }
 }

@@ -50,6 +50,7 @@ public abstract class MethodIntrospector {
 	 * or {@code null} for no match
 	 * @return the selected methods associated with their metadata (in the order of retrieval),
 	 * or an empty map in case of no match
+	 * 查找targetType类下所有关联的信息，并选出相应handler方法
 	 */
 	public static <T> Map<Method, T> selectMethods(Class<?> targetType, final MetadataLookup<T> metadataLookup) {
 		final Map<Method, T> methodMap = new LinkedHashMap<>();
@@ -64,9 +65,10 @@ public abstract class MethodIntrospector {
 
 		for (Class<?> currentHandlerType : handlerTypes) {
 			final Class<?> targetClass = (specificHandlerType != null ? specificHandlerType : currentHandlerType);
-
+			//
 			ReflectionUtils.doWithMethods(currentHandlerType, method -> {
 				Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+				//T = RequestMappingInfo
 				T result = metadataLookup.inspect(specificMethod);
 				if (result != null) {
 					Method bridgedMethod = BridgeMethodResolver.findBridgedMethod(specificMethod);
@@ -76,7 +78,7 @@ public abstract class MethodIntrospector {
 				}
 			}, ReflectionUtils.USER_DECLARED_METHODS);
 		}
-
+		//key类型为Method，value类型为RequestMappingInfo
 		return methodMap;
 	}
 

@@ -406,6 +406,7 @@ public class ContextLoader {
 		}
 
 		customizeContext(sc, wac);
+		//调用容器刷新
 		wac.refresh();
 	}
 

@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
  * ps：如果任务耗时很长，不想让客户端阻塞太久，则选用方式2，把超时时间调小，先返回类似"处理中的"的结果，让客户端通过其他接口查询。
  *
  */
-@RestController
+@RestController()
 public class AsynController {
 
 

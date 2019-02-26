@@ -198,10 +198,11 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 		if (logger.isDebugEnabled()) {
 			logger.debug("Looking for request mappings in application context: " + getApplicationContext());
 		}
+		//获取容器中所有的bean的名字
 		String[] beanNames = (this.detectHandlerMethodsInAncestorContexts ?
 				BeanFactoryUtils.beanNamesForTypeIncludingAncestors(obtainApplicationContext(), Object.class) :
 				obtainApplicationContext().getBeanNamesForType(Object.class));
-
+		//
 		for (String beanName : beanNames) {
 			if (!beanName.startsWith(SCOPED_TARGET_NAME_PREFIX)) {
 				Class<?> beanType = null;
@@ -214,7 +215,9 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 						logger.debug("Could not resolve target class for bean with name '" + beanName + "'", ex);
 					}
 				}
+				//判断bean对应的类上是否使用了@Controller或者@RequestMapping
 				if (beanType != null && isHandler(beanType)) {
+					//把类下所有带有handler注解修饰的方法 封装起来缓存到 MappingRegistry
 					detectHandlerMethods(beanName);
 				}
 			}
@@ -227,14 +230,19 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	 * @param handler the bean name of a handler or a handler instance
 	 */
 	protected void detectHandlerMethods(final Object handler) {
+		//获取beanName对应的 Class
 		Class<?> handlerType = (handler instanceof String ?
 				obtainApplicationContext().getType((String) handler) : handler.getClass());
 
 		if (handlerType != null) {
 			final Class<?> userType = ClassUtils.getUserClass(handlerType);
+			//1、筛选出类下所有带有handle注解（@requestMapping）的方法，并将这些方法包装成RequestMappingInfo，
+			// 并以Method为key类型，RequestMappingInfo为value类型存放到map中
+			//2、最终生成一个Map<Method,RequestMappingInfo>
 			Map<Method, T> methods = MethodIntrospector.selectMethods(userType,
 					(MethodIntrospector.MetadataLookup<T>) method -> {
 						try {
+							//通过Method 创建RequestMappingInfo对象（使用了建造者模式）
 							return getMappingForMethod(method, userType);
 						}
 						catch (Throwable ex) {
@@ -245,8 +253,10 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			if (logger.isDebugEnabled()) {
 				logger.debug(methods.size() + " request handler methods found on " + userType + ": " + methods);
 			}
+			//遍历Map<Method,RequestMappingInfo> methods 注册到 mappingRegistry
 			methods.forEach((method, mapping) -> {
 				Method invocableMethod = AopUtils.selectInvocableMethod(method, userType);
+				//将每个方法所有信息注册到 mappingRegistry
 				registerHandlerMethod(handler, invocableMethod, mapping);
 			});
 		}
@@ -474,15 +484,23 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 	/**
 	 * A registry that maintains all mappings to handler methods, exposing methods
 	 * to perform lookups and providing concurrent access.
+	 * MappingRegistry是RequestMappingHandlerMapping的属性，MappingRegistry对RequestMappingInfo进行了多种缓存映射，方便查找。
 	 *
+	 * 至此，context:component-scan、mvc:annotation-driven、RequestMappingInfo以及HandlerMethod的解析及工作原理，都已经基本明确了。
+	 *
+	 * context:component-scan：主要完成bean的解析工作。
+	 *
+	 * mvc:annotation-driven：主要完成从controllor bean中解析出RequestMappingInfo，封装为HandlerMethod对象
 	 * <p>Package-private for testing purposes.
+	 *
+	 * T = RequestMappingInfo
 	 */
 	class MappingRegistry {
-
+		//MappingRegistration =RequestMappingInfo, handlerMethod, directUrls, URLname
 		private final Map<T, MappingRegistration<T>> registry = new HashMap<>();
 
 		private final Map<T, HandlerMethod> mappingLookup = new LinkedHashMap<>();
-
+		//<url,RequestMappingInfo>
 		private final MultiValueMap<String, T> urlLookup = new LinkedMultiValueMap<>();
 
 		private final Map<String, List<HandlerMethod>> nameLookup = new ConcurrentHashMap<>();
@@ -537,17 +555,20 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 			this.readWriteLock.readLock().unlock();
 		}
 
+		//handler=beanName；mapping=RequestMappingInfo
 		public void register(T mapping, Object handler, Method method) {
+			//上锁
 			this.readWriteLock.writeLock().lock();
 			try {
-				HandlerMethod handlerMethod = createHandlerMethod(handler, method);
+				//根据beanName和method对象创建HandlerMethod
+				HandlerMethod handlerMethod = createHandlerMethod(handler, method);//new HandlerMethod(beanName,beanFactory,method)
 				assertUniqueMethodMapping(handlerMethod, mapping);
 
 				if (logger.isInfoEnabled()) {
 					logger.info("Mapped \"" + mapping + "\" onto " + handlerMethod);
 				}
 				this.mappingLookup.put(mapping, handlerMethod);
-
+				// 不带通配符*和?号的，直接加入urlLookup
 				List<String> directUrls = getDirectUrls(mapping);
 				for (String url : directUrls) {
 					this.urlLookup.add(url, mapping);
@@ -563,7 +584,7 @@ public abstract class AbstractHandlerMethodMapping<T> extends AbstractHandlerMap
 				if (corsConfig != null) {
 					this.corsLookup.put(handlerMethod, corsConfig);
 				}
-
+				//将handler信息存放在registry Map<T, MappingRegistration<T>>
 				this.registry.put(mapping, new MappingRegistration<>(mapping, handlerMethod, directUrls, name));
 			}
 			finally {
